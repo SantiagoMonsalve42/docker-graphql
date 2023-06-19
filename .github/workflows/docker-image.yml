@@ -34,16 +34,16 @@ jobs:
         docker login -u $DOCKER_USER -p $DOCKER_PASS
         echo "New version: $NEW_VERSION !"
 
-#     - name: build_docker
-#       env:
-#           DOCKER_USER: ${{secrets.DOCKER_USER}}
-#       run: |
-#         docker build . --file Dockerfile --tag $DOCKER_USER/graphql-test-docker:0.0.2
-#         docker build . --file Dockerfile --tag $DOCKER_USER/graphql-test-docker:latest
+    - name: build_docker
+      env:
+          DOCKER_USER: ${{secrets.DOCKER_USER}}
+      run: |
+        docker build . --file Dockerfile --tag $DOCKER_USER/graphql-test-docker:${{steps.version.outputs.version}}
+        docker build . --file Dockerfile --tag $DOCKER_USER/graphql-test-docker:latest
       
-#     - name: push_image
-#       env:
-#           DOCKER_USER: ${{secrets.DOCKER_USER}}
-#       run: |
-#         docker push $DOCKER_USER/graphql-test-docker:0.0.2
-#         docker push $DOCKER_USER/graphql-test-docker:latest
+    - name: push_image
+      env:
+          DOCKER_USER: ${{secrets.DOCKER_USER}}
+      run: |
+        docker push $DOCKER_USER/graphql-test-docker:${{steps.version.outputs.version}}
+        docker push $DOCKER_USER/graphql-test-docker:latest
