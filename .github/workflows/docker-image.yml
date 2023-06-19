@@ -29,7 +29,7 @@ jobs:
           DOCKER_USER: ${{secrets.DOCKER_USER}}
       run: |
         docker build . --file Dockerfile --tag $DOCKER_USER/graphql-test-docker:0.0.2
-        docker build . --file Dockerfile --tag $DOCKER_USER/graphql-test-docker:lastest
+        docker build . --file Dockerfile --tag $DOCKER_USER/graphql-test-docker:latest
       
     - name: push_image
       env:
