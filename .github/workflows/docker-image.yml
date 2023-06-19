@@ -18,22 +18,32 @@ jobs:
       with:
         fetch-depth: 0
         
+    - name: Git Semantic Version
+      uses: PaulHatch/semantic-version@v4.0.3 
+      with: 
+        major_patter: "major:"
+        minor_patter: "feat:"
+        format: "${major}.${minor}.${patch}-prerelease${increment}"
+      id: version
     - name: login_docker
       env:
         DOCKER_USER: ${{secrets.DOCKER_USER}}
         DOCKER_PASS: ${{secrets.DOCKER_PASS}}
-      run: docker login -u $DOCKER_USER -p $DOCKER_PASS
+        NEW_VERSION: ${{steps.version.outputs.version}}
+      run: |
+        docker login -u $DOCKER_USER -p $DOCKER_PASS
+        echo "New version: $NEW_VERSION !"
 
-    - name: build_docker
-      env:
-          DOCKER_USER: ${{secrets.DOCKER_USER}}
-      run: |
-        docker build . --file Dockerfile --tag $DOCKER_USER/graphql-test-docker:0.0.2
-        docker build . --file Dockerfile --tag $DOCKER_USER/graphql-test-docker:latest
+#     - name: build_docker
+#       env:
+#           DOCKER_USER: ${{secrets.DOCKER_USER}}
+#       run: |
+#         docker build . --file Dockerfile --tag $DOCKER_USER/graphql-test-docker:0.0.2
+#         docker build . --file Dockerfile --tag $DOCKER_USER/graphql-test-docker:latest
       
-    - name: push_image
-      env:
-          DOCKER_USER: ${{secrets.DOCKER_USER}}
-      run: |
-        docker push $DOCKER_USER/graphql-test-docker:0.0.2
-        docker push $DOCKER_USER/graphql-test-docker:latest
+#     - name: push_image
+#       env:
+#           DOCKER_USER: ${{secrets.DOCKER_USER}}
+#       run: |
+#         docker push $DOCKER_USER/graphql-test-docker:0.0.2
+#         docker push $DOCKER_USER/graphql-test-docker:latest
