@@ -24,6 +24,12 @@ jobs:
         DOCKER_PASS: ${{secrets.DOCKER_PASS}}
       run: docker login -u $DOCKER_USER -p $DOCKER_PASS
 
-
-#     - name: Build the Docker image
-#       run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+    - name: build_docker
+      env:
+          DOCKER_USER: ${{secrets.DOCKER_USER}}
+      run: docker build . --file Dockerfile --tag $DOCKER_USER/graphql-test-docker:0.0.2
+      
+    - name: push_image
+      env:
+          DOCKER_USER: ${{secrets.DOCKER_USER}}
+      run: docker push $DOCKER_USER/graphql-test-docker:0.0.2
